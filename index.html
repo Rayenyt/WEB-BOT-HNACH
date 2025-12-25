@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>FF Professional API Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+*{box-sizing:border-box;font-family:Segoe UI}
+body{
+margin:0;
+min-height:100vh;
+background:radial-gradient(circle at top,#0a1f3f,#020814);
+color:#fff;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.panel{
+width:95%;
+max-width:1100px;
+background:rgba(10,20,40,.8);
+backdrop-filter:blur(15px);
+border-radius:30px;
+padding:30px;
+box-shadow:0 0 60px rgba(0,200,255,.4);
+}
+
+h1{
+text-align:center;
+color:#00d4ff;
+text-shadow:0 0 20px #00d4ff;
+margin-bottom:30px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+}
+
+.card{
+background:#020c1f;
+border-radius:20px;
+padding:18px;
+box-shadow:0 0 25px rgba(0,150,255,.35);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-4px);
+box-shadow:0 0 40px rgba(0,200,255,.7);
+}
+
+.card h3{
+margin:0 0 10px;
+color:#7be9ff;
+}
+
+input,button{
+width:100%;
+padding:12px;
+margin:6px 0;
+border:none;
+border-radius:12px;
+outline:none;
+}
+
+input{
+background:#04152e;
+color:#fff;
+}
+
+button{
+background:linear-gradient(135deg,#00aaff,#00eaff);
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 0 20px rgba(0,200,255,.8);
+}
+
+button:hover{
+box-shadow:0 0 35px rgba(0,255,255,1);
+}
+
+.result{
+margin-top:30px;
+min-height:280px;
+padding:20px;
+border-radius:25px;
+background:#010915;
+box-shadow:
+0 0 45px rgba(0,200,255,.6),
+inset 0 0 25px rgba(0,0,0,.9);
+overflow:auto;
+}
+
+pre{
+white-space:pre-wrap;
+color:#9be7ff;
+}
+
+img{
+max-width:100%;
+border-radius:20px;
+box-shadow:0 0 40px rgba(0,200,255,.9);
+}
+
+.loading{
+color:#00d4ff;
+font-size:18px;
+text-align:center;
+animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+0%{opacity:.4}
+50%{opacity:1}
+100%{opacity:.4}
+}
+</style>
+</head>
+
+<body>
+
+<div class="panel">
+<h1>🔥 Free Fire Professional Panel</h1>
+
+<div class="cards">
+
+<div class="card">
+<h3>Check Ban</h3>
+<input id="ban_uid" placeholder="UID">
+<button onclick="apiCheckBan()">RUN</button>
+</div>
+
+<div class="card">
+<h3>Player Info</h3>
+<input id="info_uid" placeholder="UID">
+<button onclick="apiInfo()">RUN</button>
+</div>
+
+<div class="card">
+<h3>JWT Token</h3>
+<input id="jwt_uid" placeholder="UID">
+<input id="jwt_pass" placeholder="Password">
+<button onclick="apiJWT()">RUN</button>
+</div>
+
+<div class="card">
+<h3>Add Friend</h3>
+<input id="add_uid" placeholder="UID">
+<input id="add_pass" placeholder="Password">
+<input id="add_player" placeholder="Player ID">
+<button onclick="apiAdd()">RUN</button>
+</div>
+
+<div class="card">
+<h3>Remove Friend</h3>
+<input id="rm_uid" placeholder="UID">
+<input id="rm_pass" placeholder="Password">
+<input id="rm_player" placeholder="Player ID">
+<button onclick="apiRemove()">RUN</button>
+</div>
+
+<div class="card">
+<h3>Set Bio</h3>
+<input id="bio_token" placeholder="Token">
+<input id="bio_text" placeholder="Bio Text">
+<button onclick="apiBio()">RUN</button>
+</div>
+
+<div class="card">
+<h3>Profile Banner</h3>
+<input id="bnr_uid" placeholder="UID">
+<button onclick="apiBNR()">RUN</button>
+</div>
+
+<div class="card">
+<h3>Spam</h3>
+<input id="spam_uid" placeholder="UID">
+<button onclick="apiSpam()">RUN</button>
+</div>
+
+</div>
+
+<div class="result" id="result">
+<b>⬇ النتيجة النهائية ستظهر هنا ⬇</b>
+</div>
+
+</div>
+
+<script>
+function loading(){
+result.innerHTML='<div class="loading">LOADING...</div>'
+}
+
+async function fetchJSON(url){
+loading()
+try{
+let r=await fetch(url)
+let j=await r.json()
+result.innerHTML=`<pre>${JSON.stringify(j,null,2)}</pre>`
+}catch{
+result.innerHTML="❌ API ERROR"
+}
+}
+
+function apiCheckBan(){
+fetchJSON(`https://anis-checkban-api.onrender.com/checkbanned?id=${ban_uid.value}`)
+}
+function apiInfo(){
+fetchJSON(`https://ff-api-anis.onrender.com/check?uid=${info_uid.value}`)
+}
+function apiJWT(){
+fetchJSON(`https://anis-jwt-token-api.onrender.com/jwt-token?uid=${jwt_uid.value}&password=${jwt_pass.value}`)
+}
+function apiAdd(){
+fetchJSON(`https://anis-add-remove-api.onrender.com/add_friend?uid=${add_uid.value}&password=${add_pass.value}&player_id=${add_player.value}`)
+}
+function apiRemove(){
+fetchJSON(`https://anis-add-remove-api.onrender.com/remove_friend?uid=${rm_uid.value}&password=${rm_pass.value}&player_id=${rm_player.value}`)
+}
+function apiBio(){
+fetchJSON(`https://anis-long-bio-api.onrender.com/set-bio?token=${bio_token.value}&bio=${encodeURIComponent(bio_text.value)}`)
+}
+function apiSpam(){
+fetchJSON(`https://anis-spam-api.onrender.com/spam?uid=${spam_uid.value}`)
+}
+function apiBNR(){
+result.innerHTML=`<img src="https://anis-xbanner-api.onrender.com/profile?uid=${bnr_uid.value}">`
+}
+</script>
+
+</body>
+</html>
